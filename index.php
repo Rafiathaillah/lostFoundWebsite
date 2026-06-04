@@ -18,11 +18,13 @@ $reports = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Dashboard - Lost & Found Collage</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body class="bg-gray-50 min-h-screen pb-12">
     <nav class="bg-white shadow-sm border-b sticky top-0 z-50">
         <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
@@ -61,10 +63,20 @@ $reports = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <h3 class="text-lg font-bold text-gray-800 mb-1"><?= htmlspecialchars($item['itemName']) ?></h3>
                             <p class="text-xs text-gray-400 mb-3">Dilaporkan oleh: <span class="text-gray-600 font-medium"><?= htmlspecialchars($item['fullName']) ?></span></p>
                             <p class="text-sm text-gray-600 line-clamp-3 mb-4"><?= htmlspecialchars($item['description']) ?></p>
-                            
+
                             <div class="text-xs text-gray-500 space-y-1 bg-gray-50 p-2.5 rounded-lg">
+                                <div class="w-full h-full bg-gray-200 rounded-md overflow-hidden mb-2 shadow-inner">
+                                    <img src="upload/<?= htmlspecialchars($item['itemPhoto']) ?>"
+                                        alt="<?= htmlspecialchars($item['itemName']) ?>"
+                                        class="object-cover"
+                                        onerror="this.onerror=null; this.src='uploads/default.jpg';">
+                                </div>
                                 <div><strong>Lokasi terakhir:</strong> <?= htmlspecialchars($item['lastLocation']) ?></div>
-                                <div>Status: <span class="font-semibold text-amber-600"><?= htmlspecialchars($item['status']) ?></span></div>
+                                <div>Status: 
+                                    <span class="font-semibold <?= $item['status'] === 'resolved' ? 'text-green-600' : 'text-amber-600' ?>">
+                                        <?= htmlspecialchars($item['status']) ?>
+                                    </span>
+                                </div>
                             </div>
                         </div>
 
@@ -83,4 +95,5 @@ $reports = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </main>
 </body>
+
 </html>
