@@ -30,13 +30,13 @@ $myClaims = $stmt_claims->fetchAll(PDO::FETCH_ASSOC);
     <nav class="bg-white shadow-sm border-b p-4">
         <div class="max-w-6xl mx-auto flex justify-between items-center">
             <a href="index.php" class="text-blue-600 font-bold">← Kembali ke Dashboard</a>
-            <h1 class="text-lg font-semibold text-gray-700">Manajemen Akun</h1>
+            <h1 class="text-lg font-semibold text-gray-700">Profil Saya</h1>
         </div>
     </nav>
 
     <main class="max-w-6xl mx-auto px-4 mt-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
         <section class="bg-white p-6 rounded-xl border shadow-sm">
-            <h2 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2">📋 Postingan Saya (My Post)</h2>
+            <h2 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2">Postingan Saya</h2>
             <div class="space-y-4">
                 <?php if(count($myPosts) > 0): ?>
                     <?php foreach($myPosts as $post): ?>
@@ -61,7 +61,7 @@ $myClaims = $stmt_claims->fetchAll(PDO::FETCH_ASSOC);
         </section>
 
         <section class="bg-white p-6 rounded-xl border shadow-sm">
-            <h2 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2">🔑 Klaim Saya (My Claim)</h2>
+            <h2 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2">Klaim Saya</h2>
             <div class="space-y-4">
                 <?php if(count($myClaims) > 0): ?>
                     <?php foreach($myClaims as $claim): ?>

@@ -42,7 +42,7 @@ $reports = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <p class="text-gray-500 text-sm">Temukan atau laporkan penemuan barang di lingkungan kampus</p>
             </div>
             <a href="createReport.php" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2.5 rounded-lg shadow-sm flex items-center space-x-2 transition">
-                <span>➕</span> <span>Post Barang</span>
+                <span>Post Barang</span>
             </a>
         </div>
 
