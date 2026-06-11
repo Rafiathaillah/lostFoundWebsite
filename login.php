@@ -54,8 +54,8 @@ $pageIcons = ['wallet','key','bottle','card','phone','tag'];
 
     <section class="auth__form">
         <div class="auth__card">
-            <h2>Selamat datang</h2>
-            <p class="auth__sub">Masuk dengan kredensial kampusmu</p>
+            <h2>Selamat Datang!</h2>
+            <p class="auth__sub">Masuk dengan menggunakan NIM mu</p>
 
             <?php if ($error): ?><div class="alert alert-error"><?= e($error) ?></div><?php endif; ?>
 
@@ -76,7 +76,6 @@ $pageIcons = ['wallet','key','bottle','card','phone','tag'];
             </form>
 
             <p class="auth__alt">Belum punya akun? <a href="register.php">Daftar di sini</a></p>
-            <p class="auth__alt" style="margin-top:8px;font-size:.8rem;">Akun demo — NIM <strong>2021001234</strong>, password <strong>mahasiswa123</strong></p>
         </div>
     </section>
 </div>
