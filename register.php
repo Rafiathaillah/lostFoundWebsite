@@ -1,58 +1,87 @@
 <?php
-session_start();
-require_once 'connection.php';
+require_once __DIR__ . '/includes/functions.php';
+
+if (isLoggedIn()) { header('Location: index.php'); exit; }
 
 $error = '';
 $success = '';
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nim = trim($_POST['nim']);
-    $fullName = trim($_POST['fullName']);
-    $password = $_POST['password'];
+    $nim      = trim($_POST['nim'] ?? '');
+    $fullName = trim($_POST['fullName'] ?? '');
+    $password = $_POST['password'] ?? '';
 
-    if (!empty($nim) && !empty($fullName) && !empty($password)) {
-        try {
-            $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
-            $stmt = $pdo->prepare("INSERT INTO `user` (`nim`, `fullName`, `password`) VALUES (?, ?, ?)");
-            $stmt->execute([$nim, $fullName, $hashedPassword]);
-            $success = "Registrasi sukses! Silakan login.";
-        } catch (PDOException $e) {
-            $error = "NIM sudah terdaftar atau terjadi kesalahan sistem.";
-        }
+    if ($nim === '' || $fullName === '' || $password === '') {
+        $error = 'Semua kolom wajib diisi.';
+    } elseif (strlen($password) < 6) {
+        $error = 'Password minimal 6 karakter.';
     } else {
-        $error = "Semua kolom wajib diisi.";
+        try {
+            $hash = password_hash($password, PASSWORD_BCRYPT);
+            $stmt = $pdo->prepare("INSERT INTO `user` (`nim`,`fullName`,`password`) VALUES (?,?,?)");
+            $stmt->execute([$nim, $fullName, $hash]);
+            $success = 'Registrasi berhasil! Silakan login.';
+        } catch (PDOException $e) {
+            $error = ($e->getCode() === '23000')
+                ? 'NIM tersebut sudah terdaftar.'
+                : 'Terjadi kesalahan sistem.';
+        }
     }
 }
+
+$pageIcons = ['wallet','key','bottle','card','phone','tag'];
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Register - Lost & Found</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar — Campus Lost &amp; Found</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
-<body class="bg-gray-100 flex items-center justify-center h-screen">
-    <div class="bg-white p-8 rounded-lg shadow-md w-96">
-        <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Daftar Akun</h2>
-        <?php if($error): ?> <div class="bg-red-100 text-red-700 p-2 rounded mb-4 text-sm"><?= $error ?></div> <?php endif; ?>
-        <?php if($success): ?> <div class="bg-green-100 text-green-700 p-2 rounded mb-4 text-sm"><?= $success ?></div> <?php endif; ?>
-        
-        <form action="" method="POST" class="space-y-4">
-            <div>
-                <label class="block text-sm font-medium text-gray-700">NIM</label>
-                <input type="text" name="nim" class="mt-1 block w-full border border-gray-300 rounded p-2 focus:ring-blue-500 focus:border-blue-500" required>
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Nama Lengkap</label>
-                <input type="text" name="fullName" class="mt-1 block w-full border border-gray-300 rounded p-2 focus:ring-blue-500 focus:border-blue-500" required>
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Password</label>
-                <input type="password" name="password" class="mt-1 block w-full border border-gray-300 rounded p-2 focus:ring-blue-500 focus:border-blue-500" required>
-            </div>
-            <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded font-semibold hover:bg-blue-700 transition">Daftar</button>
-        </form>
-        <p class="text-sm text-center text-gray-600 mt-4">Sudah punya akun? <a href="login.php" class="text-blue-600 hover:underline">Login disini</a></p>
-    </div>
+<body>
+<div class="auth">
+    <aside class="auth__brand">
+        <span class="ring r1"></span>
+        <span class="ring r2"></span>
+        <div class="tiles">
+            <?php foreach ($pageIcons as $ic): ?>
+                <span class="tile"><?= icon($ic) ?></span>
+            <?php endforeach; ?>
+        </div>
+        <h1>Campus<br>Lost &amp; Found</h1>
+        <p>Daftarkan akunmu sekali, lalu laporkan atau klaim barang kapan saja.</p>
+    </aside>
+
+    <section class="auth__form">
+        <div class="auth__card">
+            <h2>Buat akun</h2>
+            <p class="auth__sub">Gunakan data mahasiswa yang valid</p>
+
+            <?php if ($error): ?><div class="alert alert-error"><?= e($error) ?></div><?php endif; ?>
+            <?php if ($success): ?><div class="alert alert-success"><?= e($success) ?> <a href="login.php" style="text-decoration:underline">Login</a></div><?php endif; ?>
+
+            <form method="POST" action="">
+                <?= csrfField() ?>
+                <div class="field">
+                    <label class="label">NIM (Student ID)</label>
+                    <input class="input" type="text" name="nim" placeholder="cth. 2021001234" value="<?= e($_POST['nim'] ?? '') ?>" required>
+                </div>
+                <div class="field">
+                    <label class="label">Nama Lengkap</label>
+                    <input class="input" type="text" name="fullName" placeholder="cth. Rafi Pratama" value="<?= e($_POST['fullName'] ?? '') ?>" required>
+                </div>
+                <div class="field">
+                    <label class="label">Password</label>
+                    <input class="input" type="password" name="password" placeholder="Minimal 6 karakter" required>
+                </div>
+                <button class="btn btn-primary btn-block" type="submit">Daftar</button>
+            </form>
+
+            <p class="auth__alt">Sudah punya akun? <a href="login.php">Login di sini</a></p>
+        </div>
+    </section>
+</div>
 </body>
 </html>

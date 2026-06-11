@@ -1,78 +1,96 @@
 <?php
-// Wajib ditaruh di baris nomor 1 sebelum kode apa pun
-session_start(); 
-require_once 'connection.php';
+require_once __DIR__ . '/includes/functions.php';
+
+if (isLoggedIn()) { header('Location: index.php'); exit; }
 
 $error = '';
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nim = trim($_POST['nim']);
-    $password = $_POST['password'];
+    $nim = trim($_POST['nim'] ?? '');
+    $password = $_POST['password'] ?? '';
 
-    if (!empty($nim) && !empty($password)) {
-        // Ambil data user berdasarkan NIM
+    if ($nim === '' || $password === '') {
+        $error = 'NIM dan password wajib diisi.';
+    } else {
         $stmt = $pdo->prepare("SELECT * FROM `user` WHERE `nim` = ?");
         $stmt->execute([$nim]);
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        $user = $stmt->fetch();
 
-        if ($user) {
-            // Cek cocok atau tidaknya password
-            if (password_verify($password, $user['password'])) {
-                
-                // Set Session dengan Sempurna
-                $_SESSION['userID'] = $user['ID'];
-                $_SESSION['fullName'] = $user['fullName'];
-                
-                // Redirect menggunakan JavaScript sebagai cadangan jika header() diblokir server
-                echo "<script>
-                        alert('Login Berhasil! Mengalihkan...');
-                        window.location.href = 'index.php';
-                      </script>";
-                
-                // Tetap pasang header bawaan PHP
-                header("Location: index.php");
-                exit;
-            } else {
-                $error = "Password salah! (Catatan seeder: passwordnya adalah 'mahasiswa123')";
-            }
-        } else {
-            $error = "NIM tidak ditemukan di database. Silakan register dulu.";
+        if ($user && password_verify($password, $user['password'])) {
+            session_regenerate_id(true);
+            $_SESSION['userID']   = (int)$user['ID'];
+            $_SESSION['fullName'] = $user['fullName'];
+            header('Location: index.php');
+            exit;
         }
-    } else {
-        $error = "Silakan isi semua kolom.";
+        $error = 'NIM atau password salah.';
     }
 }
+
+$pageIcons = ['wallet','key','bottle','card','phone','tag'];
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Login - Lost & Found</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login — Campus Lost &amp; Found</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
-<body class="bg-gray-100 flex items-center justify-center h-screen">
-    <div class="bg-white p-8 rounded-lg shadow-md w-96">
-        <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Lost & Found Login</h2>
-        
-        <!-- Jika ada error, kotak merah ini WAJIB muncul -->
-        <?php if($error): ?> 
-            <div class="bg-red-100 border border-red-400 text-red-700 p-3 rounded mb-4 text-sm font-semibold">
-                ⚠️ <?= $error ?>
-            </div> 
-        <?php endif; ?>
-        
-        <form action="" method="POST" class="space-y-4">
-            <div>
-                <label class="block text-sm font-medium text-gray-700">NIM</label>
-                <input type="text" name="nim" class="mt-1 block w-full border border-gray-300 rounded p-2 focus:ring-blue-500" required>
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Password</label>
-                <input type="password" name="password" class="mt-1 block w-full border border-gray-300 rounded p-2 focus:ring-blue-500" required>
-            </div>
-            <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded font-semibold hover:bg-blue-700 transition">Masuk</button>
-        </form>
-        <p class="text-sm text-center text-gray-600 mt-4">Belum punya akun? <a href="register.php" class="text-blue-600 hover:underline">Register</a></p>
-    </div>
+<body>
+<div class="auth">
+    <aside class="auth__brand">
+        <span class="ring r1"></span>
+        <span class="ring r2"></span>
+        <div class="tiles">
+            <?php foreach ($pageIcons as $ic): ?>
+                <span class="tile"><?= icon($ic) ?></span>
+            <?php endforeach; ?>
+        </div>
+        <h1>Campus<br>Lost &amp; Found</h1>
+        <p>Membantu mahasiswa menemukan kembali barang yang hilang di lingkungan kampus.</p>
+    </aside>
+
+    <section class="auth__form">
+        <div class="auth__card">
+            <h2>Selamat datang</h2>
+            <p class="auth__sub">Masuk dengan kredensial kampusmu</p>
+
+            <?php if ($error): ?><div class="alert alert-error"><?= e($error) ?></div><?php endif; ?>
+
+            <form method="POST" action="">
+                <?= csrfField() ?>
+                <div class="field">
+                    <label class="label">NIM (Student ID)</label>
+                    <input class="input" type="text" name="nim" placeholder="cth. 2021001234" value="<?= e($_POST['nim'] ?? '') ?>" required autofocus>
+                </div>
+                <div class="field">
+                    <label class="label">Password</label>
+                    <div class="input-group">
+                        <input class="input" type="password" name="password" id="pw" placeholder="Masukkan password" required>
+                        <button type="button" class="toggle-eye" id="eyeBtn" aria-label="Tampilkan password"><?= icon('eye') ?></button>
+                    </div>
+                </div>
+                <button class="btn btn-primary btn-block" type="submit">Masuk</button>
+            </form>
+
+            <p class="auth__alt">Belum punya akun? <a href="register.php">Daftar di sini</a></p>
+            <p class="auth__alt" style="margin-top:8px;font-size:.8rem;">Akun demo — NIM <strong>2021001234</strong>, password <strong>mahasiswa123</strong></p>
+        </div>
+    </section>
+</div>
+
+<script>
+    const pw = document.getElementById('pw');
+    const eyeBtn = document.getElementById('eyeBtn');
+    const eye = `<?= str_replace(["\n","\r"], '', icon('eye')) ?>`;
+    const eyeOff = `<?= str_replace(["\n","\r"], '', icon('eye-off')) ?>`;
+    eyeBtn.addEventListener('click', () => {
+        const show = pw.type === 'password';
+        pw.type = show ? 'text' : 'password';
+        eyeBtn.innerHTML = show ? eyeOff : eye;
+    });
+</script>
 </body>
 </html>

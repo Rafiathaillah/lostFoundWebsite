@@ -1,19 +1,21 @@
 <?php
-session_start();
-require_once 'connection.php';
+require_once __DIR__ . '/includes/functions.php';
+requireLogin();
 
-if (!isset($_SESSION['userID'])) {
-    header("Location: login.php");
-    exit;
+if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !checkCsrf()) { header('Location: profile.php'); exit; }
+
+$id = $_POST['id'] ?? '';
+if (ctype_digit((string)$id)) {
+    // Hapus foto fisik jika bukan default
+    $f = $pdo->prepare("SELECT itemPhoto FROM report WHERE ID = ? AND userID = ?");
+    $f->execute([$id, currentUserId()]);
+    $photo = $f->fetchColumn();
+    if ($photo && $photo !== 'default.jpg') {
+        $path = __DIR__ . '/uploads/' . basename($photo);
+        if (is_file($path)) @unlink($path);
+    }
+    $pdo->prepare("DELETE FROM report WHERE ID = ? AND userID = ?")->execute([$id, currentUserId()]);
 }
 
-$id = $_GET['id'] ?? null;
-
-if ($id) {
-    // Validasi kepemilikan data sebelum dieksekusi demi keamanan
-    $stmt = $pdo->prepare("DELETE FROM `report` WHERE `ID` = ? AND `userID` = ?");
-    $stmt->execute([$id, $_SESSION['userID']]);
-}
-
-header("Location: profile.php");
+header('Location: profile.php');
 exit;
