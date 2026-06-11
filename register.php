@@ -14,6 +14,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Semua kolom wajib diisi.';
     } elseif (strlen($password) < 6) {
         $error = 'Password minimal 6 karakter.';
+    } elseif (!ctype_digit($nim) || strlen($nim) < 8) {
+        $error = 'NIM harus angka dan minimal 8 digit';
     } else {
         try {
             $hash = password_hash($password, PASSWORD_BCRYPT);

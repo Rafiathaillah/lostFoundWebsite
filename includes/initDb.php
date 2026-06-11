@@ -83,7 +83,7 @@ try {
     $r->execute([6, 3, 'found', 'Tumbler hijau',         'Tumbler stainless, ada sticker kaktus di tengah', 'Perpustakaan', 'tumbler.jpg', 'pending']);
 
     echo $runningStandalone
-        ? "Database '$DB_NAME' berhasil dibuat ulang beserta data awal.\n\nLogin contoh:\n  NIM: 2021001234\n  Password: mahasiswa123"
+        ? "Database '$DB_NAME' berhasil dibuat ulang beserta data awal."
         : '';
 } catch (PDOException $e) {
     die('Gagal inisialisasi database: ' . htmlspecialchars($e->getMessage()));
