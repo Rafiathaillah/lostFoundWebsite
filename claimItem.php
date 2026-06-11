@@ -12,7 +12,6 @@ $stmt = $pdo->prepare("SELECT * FROM report WHERE ID = ?");
 $stmt->execute([$reportID]);
 $report = $stmt->fetch();
 
-// Validasi aturan klaim
 if (!$report
     || $report['reportType'] !== 'found'
     || (int)$report['userID'] === currentUserId()
@@ -21,7 +20,6 @@ if (!$report
     exit;
 }
 
-// Cegah klaim ganda dari user yang sama
 $dup = $pdo->prepare("SELECT COUNT(*) FROM claim WHERE reportID = ? AND userID = ? AND claimStatus IN ('pending','verified')");
 $dup->execute([$reportID, currentUserId()]);
 if ($dup->fetchColumn() > 0) {

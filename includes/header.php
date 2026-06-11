@@ -1,6 +1,4 @@
 <?php
-/* header.php — Layout atas untuk halaman setelah login.
-   Set $pageTitle dan $activeNav sebelum require file ini. */
 require_once __DIR__ . '/functions.php';
 requireLogin();
 

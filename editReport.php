@@ -26,7 +26,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && checkCsrf()) {
     $lastLocation = trim($_POST['lastLocation'] ?? '');
     $status       = $_POST['status'] ?? $report['status'];
 
-    // Status 'process' tidak boleh diubah manual (diatur oleh verifikasi klaim)
     if ($report['status'] === 'process') $status = 'process';
     if (!in_array($status, ['pending','resolved','process'], true)) $status = $report['status'];
 

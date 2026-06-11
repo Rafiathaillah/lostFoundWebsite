@@ -4,7 +4,6 @@ requireLogin();
 
 $uid = currentUserId();
 
-// 1. Postingan saya
 $p = $pdo->prepare("SELECT r.*, c.name AS categoryName,
         (SELECT COUNT(*) FROM claim cl WHERE cl.reportID = r.ID AND cl.claimStatus='pending') AS pendingClaims
     FROM report r JOIN category c ON r.categoryID = c.ID
@@ -12,14 +11,12 @@ $p = $pdo->prepare("SELECT r.*, c.name AS categoryName,
 $p->execute([$uid]);
 $myPosts = $p->fetchAll();
 
-// 2. Klaim saya
 $cl = $pdo->prepare("SELECT cl.*, r.itemName, r.reportType, r.itemPhoto, r.ID AS reportID
     FROM claim cl JOIN report r ON cl.reportID = r.ID
     WHERE cl.userID = ? ORDER BY cl.createdAt DESC, cl.ID DESC");
 $cl->execute([$uid]);
 $myClaims = $cl->fetchAll();
 
-// 3. Klaim masuk (ke postingan saya)
 $inc = $pdo->prepare("SELECT cl.*, r.itemName, r.itemPhoto, r.ID AS reportID, u.fullName, u.nim
     FROM claim cl
     JOIN report r ON cl.reportID = r.ID
@@ -51,7 +48,6 @@ require __DIR__ . '/includes/header.php';
     </button>
 </div>
 
-<!-- ===== Tab: Postingan Saya ===== -->
 <section class="tab-panel active" id="tab-posts">
     <?php if ($myPosts): ?>
         <?php foreach ($myPosts as $post): ?>
@@ -86,7 +82,6 @@ require __DIR__ . '/includes/header.php';
     <?php endif; ?>
 </section>
 
-<!-- ===== Tab: Klaim Saya ===== -->
 <section class="tab-panel" id="tab-claims">
     <?php if ($myClaims): ?>
         <?php foreach ($myClaims as $claim): ?>
@@ -109,7 +104,6 @@ require __DIR__ . '/includes/header.php';
     <?php endif; ?>
 </section>
 
-<!-- ===== Tab: Klaim Masuk ===== -->
 <section class="tab-panel" id="tab-incoming">
     <?php if ($incoming): ?>
         <?php foreach ($incoming as $claim): ?>

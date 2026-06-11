@@ -16,7 +16,6 @@ if (!ctype_digit((string)$categoryID) || !in_array($reportType, ['lost','found']
     exit;
 }
 
-/* ---------- Upload foto (opsional, divalidasi) ---------- */
 $filename = 'default.jpg';
 if (isset($_FILES['itemPhoto']) && $_FILES['itemPhoto']['error'] === UPLOAD_ERR_OK) {
     $file = $_FILES['itemPhoto'];

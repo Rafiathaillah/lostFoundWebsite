@@ -25,12 +25,10 @@ if (!$item) {
 
 $isOwner = ((int)$item['userID'] === currentUserId());
 
-// Klaim milik user ini pada laporan ini (jika ada)
 $myClaimStmt = $pdo->prepare("SELECT * FROM claim WHERE reportID = ? AND userID = ? ORDER BY ID DESC LIMIT 1");
 $myClaimStmt->execute([$id, currentUserId()]);
 $myClaim = $myClaimStmt->fetch();
 
-// Daftar klaim (untuk pemilik)
 $claims = [];
 if ($isOwner) {
     $cs = $pdo->prepare("SELECT cl.*, u.fullName, u.nim FROM claim cl JOIN `user` u ON cl.userID = u.ID WHERE cl.reportID = ? ORDER BY cl.ID DESC");

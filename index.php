@@ -4,7 +4,6 @@ requireLogin();
 
 $categories = $pdo->query("SELECT * FROM category ORDER BY name")->fetchAll();
 
-/* ---------- Filter ---------- */
 $q        = trim($_GET['q'] ?? '');
 $fType    = $_GET['type'] ?? '';
 $fCat     = $_GET['category'] ?? '';
@@ -28,7 +27,6 @@ $stmt = $pdo->prepare($sql);
 $stmt->execute($args);
 $reports = $stmt->fetchAll();
 
-/* ---------- Statistik ---------- */
 $stats = $pdo->query("SELECT
         COUNT(*) AS total,
         SUM(reportType='lost')   AS lost,
@@ -126,7 +124,6 @@ require __DIR__ . '/includes/header.php';
     <?php endif; ?>
 </div>
 
-<!-- ============ MODAL: Laporkan Barang ============ -->
 <div class="modal" id="postModal">
     <div class="modal__box">
         <div class="modal__head">

@@ -10,7 +10,6 @@ if (!ctype_digit((string)$claimID) || !in_array($action, ['accept','reject'], tr
     header('Location: profile.php#incoming'); exit;
 }
 
-// Ambil klaim + pastikan laporannya milik user yang login
 $stmt = $pdo->prepare("SELECT cl.*, r.userID AS ownerID, r.ID AS reportID
     FROM claim cl JOIN report r ON cl.reportID = r.ID WHERE cl.ID = ?");
 $stmt->execute([$claimID]);
@@ -25,13 +24,11 @@ $reportID = (int)$claim['reportID'];
 $pdo->beginTransaction();
 try {
     if ($action === 'accept') {
-        // Klaim ini terverifikasi, laporan selesai, klaim lain ditolak
         $pdo->prepare("UPDATE claim SET claimStatus = 'verified' WHERE ID = ?")->execute([$claimID]);
         $pdo->prepare("UPDATE claim SET claimStatus = 'rejected' WHERE reportID = ? AND ID <> ? AND claimStatus = 'pending'")
             ->execute([$reportID, $claimID]);
         $pdo->prepare("UPDATE report SET status = 'resolved' WHERE ID = ?")->execute([$reportID]);
     } else {
-        // Tolak klaim ini; jika tak ada klaim pending lain, laporan kembali terbuka
         $pdo->prepare("UPDATE claim SET claimStatus = 'rejected' WHERE ID = ?")->execute([$claimID]);
         $rest = $pdo->prepare("SELECT COUNT(*) FROM claim WHERE reportID = ? AND claimStatus = 'pending'");
         $rest->execute([$reportID]);

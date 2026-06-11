@@ -6,7 +6,6 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !checkCsrf()) { header('Location: p
 
 $id = $_POST['id'] ?? '';
 if (ctype_digit((string)$id)) {
-    // Hapus foto fisik jika bukan default
     $f = $pdo->prepare("SELECT itemPhoto FROM report WHERE ID = ? AND userID = ?");
     $f->execute([$id, currentUserId()]);
     $photo = $f->fetchColumn();

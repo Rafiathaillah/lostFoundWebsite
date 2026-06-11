@@ -1,10 +1,4 @@
 <?php
-/* ============================================================
-   initDb.php — Membuat database, tabel, dan data awal (seed).
-   Dipanggil otomatis oleh connection.php saat DB belum ada,
-   atau bisa dibuka langsung di browser untuk reset penuh.
-   ============================================================ */
-
 $DB_HOST = 'localhost';
 $DB_USER = 'root';
 $DB_PASS = '';
@@ -17,12 +11,10 @@ try {
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
     ]);
 
-    // Fresh drop + create
     $pdo->exec("DROP DATABASE IF EXISTS `$DB_NAME`");
     $pdo->exec("CREATE DATABASE `$DB_NAME` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
     $pdo->exec("USE `$DB_NAME`");
 
-    /* ---------- TABEL ---------- */
     $pdo->exec("CREATE TABLE `user` (
         `ID` INT AUTO_INCREMENT PRIMARY KEY,
         `nim` VARCHAR(20) NOT NULL UNIQUE,
@@ -63,7 +55,6 @@ try {
         FOREIGN KEY (`userID`)   REFERENCES `user`(`ID`)   ON DELETE CASCADE
     )");
 
-    /* ---------- SEED ---------- */
     $pw = password_hash('mahasiswa123', PASSWORD_BCRYPT);
     $u = $pdo->prepare("INSERT INTO `user` (`nim`,`fullName`,`password`) VALUES (?,?,?)");
     $u->execute(['1076012510020', 'Rafi Pratama', $pw]);
@@ -83,7 +74,6 @@ try {
     $c = $pdo->prepare("INSERT INTO `category` (`name`,`icon`) VALUES (?,?)");
     foreach ($cats as $cat) $c->execute($cat);
 
-    // Beberapa report contoh
     $r = $pdo->prepare("INSERT INTO `report`
         (`categoryID`,`userID`,`reportType`,`itemName`,`description`,`lastLocation`,`itemPhoto`,`status`)
         VALUES (?,?,?,?,?,?,?,?)");

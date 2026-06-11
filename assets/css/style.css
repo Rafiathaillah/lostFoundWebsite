@@ -1,23 +1,19 @@
-/* =========================================================
-   Campus Lost & Found — Theme
-   Palette diturunkan dari mockup login (hijau hutan + krem)
-   ========================================================= */
 :root {
   --green-900: #173a18;
   --green-800: #1e4620;
-  --green-700: #285c29;   /* primary */
+  --green-700: #285c29;   
   --green-600: #316f31;
   --green-500: #3f8a3d;
-  --green-soft: #e7efdd;  /* tint untuk badge / hover */
+  --green-soft: #e7efdd;  
   --green-line: #d3e0c6;
 
-  --cream: #f6efd7;       /* background halaman */
+  --cream: #f6efd7;       
   --cream-2: #efe6c8;
   --card: #ffffff;
   --line: #e7e2cf;
 
-  --ink: #1d2a1b;         /* teks utama */
-  --muted: #6c7866;       /* teks sekunder */
+  --ink: #1d2a1b;         
+  --muted: #6c7866;       
   --muted-2: #97a08f;
 
   --red-bg: #fbe4e2;  --red-tx: #a3352b;
@@ -53,7 +49,6 @@ h1,h2,h3,h4 { font-family: var(--display); margin: 0; line-height: 1.2; color: v
 
 .container { max-width: 1140px; margin: 0 auto; padding: 0 20px; }
 
-/* ---------- Buttons ---------- */
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
   font-family: var(--display); font-weight: 600; font-size: .92rem;
@@ -73,7 +68,6 @@ h1,h2,h3,h4 { font-family: var(--display); margin: 0; line-height: 1.2; color: v
 .btn-sm { padding: 7px 13px; font-size: .8rem; }
 .btn-block { width: 100%; }
 
-/* ---------- Forms ---------- */
 .field { margin-bottom: 16px; }
 .label { display: block; font-size: .82rem; font-weight: 600; color: var(--green-900); margin-bottom: 7px; }
 .input, .select, .textarea {
@@ -90,12 +84,10 @@ h1,h2,h3,h4 { font-family: var(--display); margin: 0; line-height: 1.2; color: v
   background: none; border: 0; cursor: pointer; color: var(--muted); padding: 6px; line-height: 0;
 }
 
-/* ---------- Alerts ---------- */
 .alert { border-radius: var(--radius-sm); padding: 11px 14px; font-size: .87rem; margin-bottom: 16px; font-weight: 500; }
 .alert-error { background: var(--red-bg); color: var(--red-tx); }
 .alert-success { background: var(--green-soft); color: var(--green-800); }
 
-/* ---------- Badges / pills ---------- */
 .badge { display: inline-flex; align-items: center; gap: 5px; font-size: .7rem; font-weight: 700;
   letter-spacing: .03em; text-transform: uppercase; padding: 4px 10px; border-radius: 999px; }
 .badge-lost   { background: var(--red-bg);  color: var(--red-tx); }
@@ -108,9 +100,6 @@ h1,h2,h3,h4 { font-family: var(--display); margin: 0; line-height: 1.2; color: v
 .chip { display:inline-flex; align-items:center; gap:6px; font-size:.74rem; font-weight:600;
   color: var(--muted); background: var(--green-soft); padding: 4px 10px; border-radius: 999px; }
 
-/* =========================================================
-   AUTH (split screen)
-   ========================================================= */
 .auth { min-height: 100vh; display: grid; grid-template-columns: 1.05fr 1fr; }
 .auth__brand {
   background: linear-gradient(160deg, var(--green-700), var(--green-900));
@@ -134,9 +123,6 @@ h1,h2,h3,h4 { font-family: var(--display); margin: 0; line-height: 1.2; color: v
 .auth__alt a { color: var(--green-700); font-weight: 600; }
 .auth__alt a:hover { text-decoration: underline; }
 
-/* =========================================================
-   NAVBAR
-   ========================================================= */
 .nav { background: rgba(246,239,215,.85); backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 40; }
 .nav__inner { display: flex; align-items: center; justify-content: space-between; height: 64px; }
@@ -153,9 +139,6 @@ h1,h2,h3,h4 { font-family: var(--display); margin: 0; line-height: 1.2; color: v
 .nav__notif { position: absolute; top: 2px; right: 4px; min-width: 17px; height: 17px; padding: 0 4px;
   background: #d8453a; color: #fff; font-size: .64rem; font-weight: 700; border-radius: 999px; display: grid; place-items: center; }
 
-/* =========================================================
-   DASHBOARD
-   ========================================================= */
 .page-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 20px; margin: 34px 0 22px; flex-wrap: wrap; }
 .page-head h2 { font-size: 1.9rem; letter-spacing: -.4px; }
 .page-head .sub { color: var(--muted); margin-top: 4px; font-size: .95rem; }
@@ -193,9 +176,6 @@ h1,h2,h3,h4 { font-family: var(--display); margin: 0; line-height: 1.2; color: v
 .empty svg { width: 54px; height: 54px; color: var(--green-line); margin: 0 auto 14px; }
 .empty h3 { color: var(--green-900); margin-bottom: 6px; }
 
-/* =========================================================
-   DETAIL
-   ========================================================= */
 .detail { display: grid; grid-template-columns: 1.1fr 1fr; gap: 30px; margin-top: 26px; align-items: start; }
 .detail__img { border-radius: var(--radius); overflow: hidden; border: 1px solid var(--line); background: var(--green-soft); box-shadow: var(--shadow-sm); }
 .detail__img img { width: 100%; aspect-ratio: 4/3; object-fit: cover; }
@@ -205,9 +185,6 @@ h1,h2,h3,h4 { font-family: var(--display); margin: 0; line-height: 1.2; color: v
 .dl dt { color: var(--muted); }
 .dl dd { margin: 0; color: var(--ink); font-weight: 500; }
 
-/* =========================================================
-   PROFILE
-   ========================================================= */
 .profile-head { display: flex; align-items: center; gap: 18px; margin: 30px 0 24px; }
 .profile-head .avatar { width: 64px; height: 64px; font-size: 1.5rem; }
 .profile-head h2 { font-size: 1.6rem; }
@@ -229,9 +206,6 @@ h1,h2,h3,h4 { font-family: var(--display); margin: 0; line-height: 1.2; color: v
 .list-row .lr-meta { font-size: .8rem; color: var(--muted); margin-top: 3px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
 .list-row .lr-actions { display: flex; gap: 8px; flex: none; }
 
-/* =========================================================
-   MODAL
-   ========================================================= */
 .modal { position: fixed; inset: 0; z-index: 80; display: none; align-items: flex-start; justify-content: center;
   background: rgba(23,40,21,.45); backdrop-filter: blur(3px); padding: 40px 16px; overflow-y: auto; }
 .modal.open { display: flex; }
@@ -259,14 +233,10 @@ h1,h2,h3,h4 { font-family: var(--display); margin: 0; line-height: 1.2; color: v
 .file-drop:hover { border-color: var(--green-500); background: var(--green-soft); }
 .file-drop .fname { font-size: .82rem; color: var(--green-800); font-weight: 600; margin-top: 4px; }
 
-/* ---------- utilities ---------- */
 .mt-0{margin-top:0}.mb-0{margin-bottom:0}.text-muted{color:var(--muted)}
 .flex{display:flex}.between{justify-content:space-between}.items-center{align-items:center}.gap-8{gap:8px}.gap-12{gap:12px}
 .divider{height:1px;background:var(--line);margin:18px 0}
 
-/* =========================================================
-   RESPONSIVE
-   ========================================================= */
 @media (max-width: 960px) {
   .auth { grid-template-columns: 1fr; }
   .auth__brand { display: none; }
